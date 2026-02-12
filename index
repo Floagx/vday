@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>For Aanya 💗</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #ffd6e8;
+      overflow-x: hidden;
+    }
+
+    .page {
+      display: none;
+      padding: 40px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    button {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      background: white;
+      color: black;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    #yesBtn {
+      transition: transform 0.3s ease;
+    }
+
+    img {
+      max-width: 300px;
+      margin-top: 20px;
+      border-radius: 15px;
+    }
+
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+  <h1>Are you Aanya?</h1>
+  <img src="img/IMG_6012.jpeg" alt="Her Picture">
+  <br>
+  <button onclick="nextPage(2)">Yes</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <h1>Are you really sure?</h1>
+  <button onclick="startCountdown()">Yes...</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <h1 id="countdown">3</h1>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="page4">
+  <h1>Will you be my Valentines? 💗</h1>
+  <button id="yesBtn" onclick="calendarPage()">Yes</button>
+  <button onclick="growYes()">No</button>
+  <p>( don't press no )</p>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page" id="page5">
+  <h1>Are you free on Feb 14 2026?</h1>
+  <input type="date" id="datePicker">
+  <br>
+  <button onclick="celebrate()">Yes</button>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page" id="page6">
+  <h1>🎉 YOU SAID YES 🎉</h1>
+  <canvas id="confetti"></canvas>
+  <br>
+  <img src="img/IMG_6449.jpeg" alt="Us">
+</div>
+
+<script>
+  function nextPage(pageNumber) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page" + pageNumber).classList.add("active");
+  }
+
+  function startCountdown() {
+    nextPage(3);
+    let count = 3;
+    let countdownElement = document.getElementById("countdown");
+    let interval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdownElement.textContent = count;
+      } else {
+        clearInterval(interval);
+        nextPage(4);
+      }
+    }, 1000);
+  }
+
+  let scale = 1;
+
+  function growYes() {
+    scale += 0.2;
+    document.getElementById("yesBtn").style.transform = "scale(" + scale + ")";
+  }
+
+  function calendarPage() {
+    nextPage(5);
+  }
+
+  function celebrate() {
+    nextPage(6);
+    launchConfetti();
+  }
+
+  function launchConfetti() {
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let pieces = [];
+
+    for (let i = 0; i < 150; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 10 + 5,
+        speed: Math.random() * 3 + 2
+      });
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#ff69b4";
+
+      pieces.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > canvas.height) p.y = 0;
+      });
+
+      requestAnimationFrame(update);
+    }
+
+    update();
+  }
+</script>
+
+</body>
+</html>
