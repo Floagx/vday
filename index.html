@@ -8,13 +8,16 @@
       margin: 0;
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #ffd6e8;
+      background: #ffd6e8; /* soft pink background for body */
       overflow-x: hidden;
     }
 
     .page {
       display: none;
       padding: 40px;
+      background: #ffd6e8; /* ensure each page is pink */
+      min-height: 100vh; /* full screen height */
+      box-sizing: border-box;
     }
 
     .active {
@@ -43,11 +46,25 @@
       border-radius: 15px;
     }
 
-    #confetti {
+    canvas {
       position: fixed;
       top: 0;
       left: 0;
       pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Heart emojis for TAURO page */
+    .heart {
+      position: absolute;
+      font-size: 2em;
+      animation: floatUp linear infinite;
+      z-index: 5; /* above page but below confetti */
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
@@ -86,11 +103,21 @@
   <h1>Are you free on Feb 14 2026?</h1>
   <input type="date" id="datePicker">
   <br>
-  <button onclick="celebrate()">Yes</button>
+  <button onclick="tauroPage()">Yes</button>
 </div>
 
-<!-- PAGE 6 -->
+<!-- PAGE 6: TAURO announcement -->
 <div class="page" id="page6">
+  <h1 style="font-size: 4em; line-height: 1.2;">
+    We are going to <strong>TAURO</strong> at 6:30 PM ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️
+  </h1>
+  <button onclick="celebrate()" style="font-size: 2em; padding: 20px 40px; margin-top: 50px;">
+    Yay!
+  </button>
+</div>
+
+<!-- PAGE 7: Celebration -->
+<div class="page" id="page7">
   <h1>🎉 YOU SAID YES 🎉</h1>
   <canvas id="confetti"></canvas>
   <br>
@@ -119,7 +146,6 @@
   }
 
   let scale = 1;
-
   function growYes() {
     scale += 0.2;
     document.getElementById("yesBtn").style.transform = "scale(" + scale + ")";
@@ -129,11 +155,17 @@
     nextPage(5);
   }
 
-  function celebrate() {
+  function tauroPage() {
     nextPage(6);
+    launchHearts();
+  }
+
+  function celebrate() {
+    nextPage(7);
     launchConfetti();
   }
 
+  /* CONFETTI */
   function launchConfetti() {
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
@@ -168,7 +200,23 @@
 
     update();
   }
+
+  /* HEARTS floating on TAURO page */
+  function launchHearts() {
+    const heartCount = 50;
+    const colors = ["❤️","💖","💘","💗","💕"];
+    for (let i = 0; i < heartCount; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.fontSize = (Math.random() * 2 + 2) + "em"; // bigger hearts
+      heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      heart.textContent = colors[Math.floor(Math.random() * colors.length)];
+      document.body.appendChild(heart);
+    }
+  }
 </script>
 
 </body>
 </html>
+
